@@ -1,0 +1,24 @@
+FROM ratsgo/embedding-cpu
+MAINTAINER uoneway <uoneway@gmail.com>
+
+RUN apt-get update -y \
+ && apt-get install -y wget language-pack-ko openjdk-8-jdk curl git-core locales nano
+
+RUN pip install --upgrade pip numpy 
+
+
+WORKDIR /notebooks/embedding
+
+### jupyter lab install 
+# WORKDIR /notebooks
+RUN pip install jupyterlab
+
+# Configuring access to Jupyter
+RUN jupyter notebook --generate-config --allow-root
+RUN echo "c.NotebookApp.password = u'sha1:b9d4f9c6b944:b39884c75b9f6cc8b4d8c8177887b33f85ce11ee'" >> ~/.jupyter/jupyter_notebook_config.py
+
+# Jupyter listens port: 8888
+# EXPOSE 8888
+
+# Run Jupytewr notebook as Docker main process
+# CMD ["jupyter", "notebook", "--allow-root", "--notebook-dir=/notebooks", "--ip='*'", "--port=8888", "--no-browser"]
